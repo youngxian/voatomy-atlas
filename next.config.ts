@@ -1,7 +1,6 @@
 import type { NextConfig } from "next";
 
-// const LANDING_URL = process.env.NEXT_PUBLIC_LANDING_URL ?? "http://localhost:3001";
-const LANDING_URL = process.env.NEXT_PUBLIC_LANDING_URL ?? "https://voatomy-landing-29uj.vercel.app";
+const LANDING_URL = process.env.NEXT_PUBLIC_LANDING_URL ?? "http://localhost:3001";
 
 
 const nextConfig: NextConfig = {
