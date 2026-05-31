@@ -22,6 +22,7 @@ import ProductActivationGate from './ProductActivationGate';
 import { usePlan } from '@/lib/plan';
 import { useAuth } from '@/lib/auth';
 import { config } from '@/lib/config';
+import { redirectToLogin } from '@/lib/auth-redirect';
 import { redirectToOnboarding, isOnboardingComplete } from '@/lib/onboarding-gate';
 import {
   getDataRetention,
@@ -62,7 +63,7 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
     if (isDemo) return;
     if (!authLoading && !user && authError?.kind === 'unauthorized') {
       document.cookie = 'session=; path=/; max-age=0';
-      window.location.href = `${config.landingUrl}/auth/login`;
+      redirectToLogin();
     }
   }, [authLoading, user, authError, isDemo]);
 

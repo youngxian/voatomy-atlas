@@ -7,6 +7,15 @@ import { config } from './config';
 type AuthError = { kind: 'unauthorized' } | { kind: 'transient'; message: string };
 
 const DEMO_DURATION_MS = 2 * 60 * 1000;
+const DEMO_COOKIE_MAX_AGE = DEMO_DURATION_MS / 1000;
+
+function setDemoCookie(): void {
+  document.cookie = `atlas_demo=1; path=/; max-age=${DEMO_COOKIE_MAX_AGE}; SameSite=Lax`;
+}
+
+function clearDemoCookie(): void {
+  document.cookie = 'atlas_demo=; path=/; max-age=0';
+}
 
 interface AuthContextValue {
   user: MeResponse | null;
@@ -45,6 +54,7 @@ function isDemoSession(): boolean {
   const params = new URLSearchParams(window.location.search);
   if (params.get('demo') === 'true') {
     sessionStorage.setItem('atlas_demo', 'true');
+    setDemoCookie();
     return true;
   }
   return sessionStorage.getItem('atlas_demo') === 'true';
@@ -70,6 +80,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       if (elapsed >= DEMO_DURATION_MS) {
         sessionStorage.removeItem('atlas_demo');
         sessionStorage.removeItem('atlas_demo_start');
+        clearDemoCookie();
         window.location.href = `${config.landingUrl}/auth/login?from=demo`;
         return;
       }
@@ -137,6 +148,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         clearInterval(interval);
         sessionStorage.removeItem('atlas_demo');
         sessionStorage.removeItem('atlas_demo_start');
+        clearDemoCookie();
         window.location.href = `${config.landingUrl}/auth/login?from=demo`;
         return;
       }
@@ -160,6 +172,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const logout = useCallback(() => {
     sessionStorage.removeItem('atlas_demo');
     sessionStorage.removeItem('atlas_demo_start');
+    clearDemoCookie();
     if (isDemo) {
       window.location.href = `${config.landingUrl}/auth/login?from=demo`;
       return;

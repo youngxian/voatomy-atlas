@@ -11,11 +11,6 @@ const nextConfig: NextConfig = {
         destination: `${LANDING_URL}/invite/:token`,
         permanent: false,
       },
-      {
-        source: "/auth/:path*",
-        destination: `${LANDING_URL}/auth/:path*`,
-        permanent: false,
-      },
     ];
   },
 };
